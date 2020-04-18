@@ -6,10 +6,10 @@ from .album import SpotifyAlbum
 class AlbumDatabase:
     def __init__(self, db_path='spotify albums.sqlite'):
         self.conn = sqlite3.connect(db_path)
-        self.cursor = self.conn.cursor()
-
         # Get responses as dictionary
         self.conn.row_factory = sqlite3.Row
+
+        self.cursor = self.conn.cursor()
 
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS albums (
