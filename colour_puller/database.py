@@ -59,10 +59,10 @@ class AlbumDatabase:
         self.conn.commit()
 
     def update_album(self, album: SpotifyAlbum, status='processing'):
-        if not status in ('queued', 'processing', 'completed'):
+        if not status in ('queued', 'processing', 'completed', 'error'):
             raise ValueError(
-                'status should be one of "queued", "processing" or "completed", '
-                f'received {status}'
+                'status should be one of "queued", "processing", "completed" '
+                f'or "error", received {status}'
             )
         
         self.cursor.execute('''
