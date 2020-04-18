@@ -1,5 +1,7 @@
 import sqlite3
 
+from .album import SpotifyAlbum
+
 
 class AlbumDatabase:
     def __init__(self, db_path='spotify albums.sqlite'):
@@ -23,7 +25,7 @@ class AlbumDatabase:
 
         self.conn.commit()
 
-    def contains_album(self, info_dict):
+    def contains_album(self, album: SpotifyAlbum):
         self.cursor.execute('''
             SELECT * FROM albums WHERE
                 name = ?
@@ -31,7 +33,7 @@ class AlbumDatabase:
                 AND release_date = ?
             LIMIT 1
             ''',
-            (info_dict['name'], info_dict['artists'], info_dict['release_date'])
+            (album.name, album.artists, album.release_date)
         )
 
         resp = self.cursor.fetchone()
@@ -47,8 +49,8 @@ class AlbumDatabase:
             ''',
             [
                 (
-                    album['name'], album['artists'], album['release_date'],
-                    album['link'], album['art_link']
+                    album.name, album.artists, album.release_date,
+                    album.link, album.art_link
                 )
                 for album in albums
             ]
@@ -56,7 +58,7 @@ class AlbumDatabase:
 
         self.conn.commit()
 
-    def update_album(self, info_dict, status='processing'):
+    def update_album(self, album: SpotifyAlbum, status='processing'):
         if not status in ('queued', 'processing', 'completed'):
             raise ValueError(
                 'status should be one of "queued", "processing" or "completed", '
@@ -74,9 +76,9 @@ class AlbumDatabase:
                 AND art_link = ?
             ''',
             (
-                status, info_dict['name'], info_dict['artists'], 
-                info_dict['release_date'], info_dict['link'], 
-                info_dict['art_link']
+                status, album.name, album.artists, 
+                album.release_date, album.link, 
+                album.art_link
             )
         )
 
