@@ -27,7 +27,8 @@ class AlbumDatabase:
 
     def contains_album(self, album: SpotifyAlbum):
         self.cursor.execute('''
-            SELECT * FROM albums WHERE
+            SELECT * FROM albums 
+            WHERE
                 name = ?
                 AND artists = ?
                 AND release_date = ?
@@ -38,7 +39,7 @@ class AlbumDatabase:
 
         resp = self.cursor.fetchone()
 
-        return len(resp) > 0
+        return resp and len(resp) > 0
 
     def add_albums(self, albums):
         filter_new = [
