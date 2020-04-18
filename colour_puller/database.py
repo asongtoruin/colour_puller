@@ -41,6 +41,10 @@ class AlbumDatabase:
         return len(resp) > 0
 
     def add_albums(self, albums):
+        filter_new = [
+            album for album in albums if not self.contains_album(album)
+        ]
+
         self.cursor.executemany('''
             INSERT INTO albums (
                 name, artists, release_date, link, art_link
@@ -52,7 +56,7 @@ class AlbumDatabase:
                     album.name, album.artists, album.release_date,
                     album.link, album.art_link
                 )
-                for album in albums
+                for album in filter_new
             ]
         )
 
