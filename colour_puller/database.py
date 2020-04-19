@@ -45,22 +45,24 @@ class AlbumDatabase:
             album for album in albums if not self.contains_album(album)
         ]
 
-        self.cursor.executemany('''
-            INSERT INTO albums (
-                id, name, artists, release_date, link, art_link
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-            ''',
-            [
-                (
-                    album.id, album.name, album.artists, album.release_date,
-                    album.link, album.art_link
+        # Catch in case we have nothing new to add
+        if filter_new:
+            self.cursor.executemany('''
+                INSERT INTO albums (
+                    id, name, artists, release_date, link, art_link
                 )
-                for album in filter_new
-            ]
-        )
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''',
+                [
+                    (
+                        album.id, album.name, album.artists, album.release_date,
+                        album.link, album.art_link
+                    )
+                    for album in filter_new
+                ]
+            )
 
-        self.conn.commit()
+            self.conn.commit()
 
     def update_album(self, album: SpotifyAlbum, status='processing'):
         if not status in ('queued', 'processing', 'completed', 'error'):
