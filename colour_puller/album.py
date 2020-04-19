@@ -1,24 +1,29 @@
 class SpotifyAlbum:
-    def __init__(self, resp_dict):
+    def __init__(self, resp_dict, from_api=True):
         self.name = resp_dict.get('name', None)
         self.release_date = resp_dict.get('release_date', 'Unknown')
 
-        # Handle possibility of many artists
-        artists = resp_dict['artists']
-        if len(artists) > 5:
-            self.artists = 'Various'
+        if from_api:
+            # Handle possibility of many artists
+            artists = resp_dict['artists']
+            if len(artists) > 5:
+                self.artists = 'Various'
+            else:
+                self.artists = ', '.join(
+                    art.get('name', 'Unknown') for art in artists
+                )
+            
+            urls = resp_dict.get('external_urls', {'spotify': None})
+            self.link = urls['spotify']
+            
+            # Get the largest version of the album artwork
+            images = resp_dict.get('images', [{'url': None, 'height': 0}])
+            images.sort(key=lambda x: x['height'], reverse=True)
+            self.art_link = images[0]['url']
         else:
-            self.artists = ', '.join(
-                art.get('name', 'Unknown') for art in artists
-            )
-        
-        urls = resp_dict.get('external_urls', {'spotify': None})
-        self.link = urls['spotify']
-        
-        # Get the largest version of the album artwork
-        images = resp_dict.get('images', [{'url': None, 'height': 0}])
-        images.sort(key=lambda x: x['height'], reverse=True)
-        self.art_link = images[0]['url']
+            self.artists = resp_dict.get('artists', 'Unknown')
+            self.link = resp_dict.get('link', None)
+            self.art_link = resp_dict.get('art_link', None)
     
     def __str__(self):
         return (
