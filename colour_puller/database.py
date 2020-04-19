@@ -30,12 +30,10 @@ class AlbumDatabase:
         self.cursor.execute('''
             SELECT * FROM albums 
             WHERE
-                name = ?
-                AND artists = ?
-                AND release_date = ?
+                id = ?
             LIMIT 1
             ''',
-            (album.name, album.artists, album.release_date)
+            (album.id, )
         )
 
         resp = self.cursor.fetchone()
@@ -49,13 +47,13 @@ class AlbumDatabase:
 
         self.cursor.executemany('''
             INSERT INTO albums (
-                name, artists, release_date, link, art_link
+                id, name, artists, release_date, link, art_link
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             ''',
             [
                 (
-                    album.name, album.artists, album.release_date,
+                    album.id, album.name, album.artists, album.release_date,
                     album.link, album.art_link
                 )
                 for album in filter_new
@@ -75,17 +73,9 @@ class AlbumDatabase:
             UPDATE albums
             SET status=?
             WHERE
-                name = ?
-                AND artists = ?
-                AND release_date = ?
-                AND link = ?
-                AND art_link = ?
+                id = ?
             ''',
-            (
-                status, album.name, album.artists, 
-                album.release_date, album.link, 
-                album.art_link
-            )
+            (status, album.id)
         )
 
         self.conn.commit()
