@@ -106,3 +106,5 @@ dmypy.json
 /.vscode
 /notebooks
 .cache*
+*.sqlite
+*.json
