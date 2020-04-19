@@ -101,8 +101,5 @@ class AlbumDatabase:
         # convert from Row to dict
         resp_dict = dict(self.cursor.fetchone())
 
-        # create album object, and set it to "processing"
-        album = SpotifyAlbum(resp_dict, from_api=False)
-        self.update_album(album, status='processing')
-
-        return album
+        # return Album object
+        return SpotifyAlbum(resp_dict, from_api=False)
