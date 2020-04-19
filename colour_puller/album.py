@@ -2,6 +2,7 @@ class SpotifyAlbum:
     def __init__(self, resp_dict, from_api=True):
         self.name = resp_dict.get('name', None)
         self.release_date = resp_dict.get('release_date', 'Unknown')
+        self.id = resp_dict.get('id', None)
 
         if from_api:
             # Handle possibility of many artists

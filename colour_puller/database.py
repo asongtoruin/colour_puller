@@ -13,6 +13,7 @@ class AlbumDatabase:
 
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS albums (
+                id text NOT NULL,
                 name text NOT NULL,
                 artists text NOT NULL,
                 release_date text NOT NULL,
