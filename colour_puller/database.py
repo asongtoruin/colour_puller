@@ -98,8 +98,12 @@ class AlbumDatabase:
             '''
         )
 
-        # convert from Row to dict
-        resp_dict = dict(self.cursor.fetchone())
+        resp = self.cursor.fetchone()
+        if resp is not None:
+            # convert from Row to dict
+            resp_dict = dict(resp)
 
-        # return Album object
-        return SpotifyAlbum(resp_dict, from_api=False)
+            # return Album object
+            return SpotifyAlbum(resp_dict, from_api=False)
+        else:
+            return None
