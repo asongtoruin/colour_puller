@@ -1,11 +1,11 @@
 from distutils.core import setup
 
 setup(
-    name='ColourPuller',
+    name='Colour Puller',
     version='0.1.0',
     description='Utilities for extracting colour palettes from Spotify album artwork',
     author='Adam Ruszkowski',
-    packages=['colourpuller'],
+    packages=['colour_puller'],
     install_requires=[
         'numpy',
         'pillow',
