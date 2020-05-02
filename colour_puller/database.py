@@ -100,3 +100,22 @@ class AlbumDatabase:
             return SpotifyAlbum(resp_dict, from_api=False)
         else:
             return None
+
+    def count_records(self, status=None):
+        count_query = 'SELECT COUNT(id) FROM albums'
+
+        if status is None:
+            params =  tuple()
+        else:
+            count_query += ' WHERE status=?'
+            params = (status, )
+
+        self.cursor.execute(count_query, params)
+
+        resp = self.cursor.fetchone()
+        if resp is not None:
+            r_dict = dict(resp)
+            return r_dict.get('COUNT(id)', None)
+        else:
+            return None
+
