@@ -10,6 +10,7 @@ setup(
         'numpy',
         'pillow',
         'scipy',
-        'scikit-learn'
+        'scikit-learn',
+        'spotipy'
     ]
 )
