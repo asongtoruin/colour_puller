@@ -177,8 +177,10 @@ class AlbumArtwork:
         row_bottom = row_top - shape_size
 
         for i, colour in enumerate(self._chosen_palette.colours):
+            scaled_colour = [p / 255 for p in colour]
             outline = (
-                'black' if colorsys.rgb_to_hls(*colour)[1] > .5 else 'white'
+                'black' if colorsys.rgb_to_hls(*scaled_colour)[1] > .5
+                else 'white'
             )
             
             shape(
