@@ -39,6 +39,7 @@ class SpotifyAlbum:
             self.art_link = resp_dict.get('art_link', None)
         
         self.album_art = None
+        self.album_palette = None
     
     def __str__(self):
         return (
@@ -65,9 +66,10 @@ class SpotifyAlbum:
         
         self.album_art = AlbumArtwork(self.art_link, source_type='url')
         self.album_art.get_palettes(**get_kwargs)
-        drawn = self.album_art.draw_palette_on_image(**draw_kwargs)
+        self.album_palette = self.album_art._chosen_palette
+        drawn, palette = self.album_art.draw_palette_on_image(**draw_kwargs)
 
-        return self.album_art.path, drawn
+        return self.album_art.path, drawn, palette
 
 
 class AlbumArtwork:
@@ -146,6 +148,10 @@ class AlbumArtwork:
             raise ValueError(
                 'No palettes available. Ensure get_palettes is run first.'
             )
+        
+        # First, save the palette to an image file
+        pal_path = os.path.join(__class__.palette_folder, self._file_name)
+        self._chosen_palette.plot(save_path=pal_path)
 
         h, w = self._original_image.size
 
@@ -191,7 +197,7 @@ class AlbumArtwork:
 
         new_image.save(new_path, quality=100, subsampling=0)
         
-        return new_path
+        return new_path, pal_path
 
 
 class Palette:
@@ -275,3 +281,7 @@ class PaletteSet:
                 )
 
             return sorted(candidates, key=lambda p: p.colour_count)[-1]
+
+if __name__ == '__main__':
+    pal = Palette(colours=[(255,255,255), (240,248,255), (245,245,245)])
+    print(pal.hex_colours)
