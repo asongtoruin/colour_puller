@@ -108,3 +108,4 @@ dmypy.json
 .cache*
 *.sqlite
 *.json
+*.jpeg
