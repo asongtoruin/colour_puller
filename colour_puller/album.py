@@ -201,6 +201,14 @@ class Palette:
         self.score = score
         self.sort()
     
+    @property
+    def mpl_colours(self):
+        return [(r/255, g/255, b/255) for r, g, b in self.colours]
+
+    @property
+    def hex_colours(self):
+        return ['#{:02x}{:02x}{:02x}'.format(*c) for c in self.colours]
+    
     def sort(self, space='hsv'):
         conversions = {
             'rgb': lambda x: x,
@@ -219,8 +227,6 @@ class Palette:
     
         n = len(self.colours)
 
-        rescaled = [(r/255, g/255, b/255) for r, g, b in self.colours]
-
         if ax:
             no_ax = False
         else:
@@ -228,7 +234,7 @@ class Palette:
             fig, ax = plt.subplots(1, 1, figsize=(n, 1))
 
         ax.imshow(np.arange(n).reshape(1, n),
-                  cmap=mpl.colors.ListedColormap(rescaled),
+                  cmap=mpl.colors.ListedColormap(self.mpl_colours),
                   interpolation="nearest")# , aspect="auto")
         ax.set_xticks(np.arange(n) - .5)
         ax.set_yticks([-.5, .5])
