@@ -64,6 +64,8 @@ class AlbumDatabase:
 
             self.conn.commit()
 
+        return len(filter_new)
+
     def update_album(self, album: SpotifyAlbum, status='processing'):
         if not status in ('queued', 'processing', 'completed', 'error'):
             raise ValueError(
