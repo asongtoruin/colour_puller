@@ -102,9 +102,16 @@ class AlbumArtwork:
 
     def get_palettes(self, resize_pix=150, min_colours=2, max_colours=15, 
                      apply_whiten=True, match_actual=True,
-                     threshold=0.05, thresh_mode='additive'):
+                     threshold=0.05, thresh_mode='additive',
+                     silhouette_mode='full', sample_size=1000, n_samples=5):
         if not self._palettes:
             self._palettes = PaletteSet()
+        
+        if silhouette_mode not in ('full', 'sample'):
+            raise ValueError(
+                'silhouette_mode should be either "full" or "sample", got '
+                + silhouette_mode
+            )
         
         # Scale down image size for faster running
         resized = self._original_image.resize((resize_pix, resize_pix))
@@ -120,7 +127,17 @@ class AlbumArtwork:
             km = KMeans(n_clusters=k, n_init=20, random_state=1234).fit(rgb)
             labels = km.labels_
 
-            score = silhouette_score(rgb, labels, metric='euclidean')
+            if silhouette_mode == 'full':
+                score = silhouette_score(rgb, labels, metric='euclidean', sample_size=5000)
+            else:
+                scores = [
+                    silhouette_score(
+                        rgb, labels, metric='euclidean', 
+                        sample_size=sample_size, random_state=i
+                    ) for i in range(n_samples)
+                ]
+
+                score = sum(scores) / len(scores)
             colours = km.cluster_centers_
 
             if match_actual:
